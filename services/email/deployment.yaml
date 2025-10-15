@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: email-service
-          image: your-dockerhub-user/email-service:latest
+          image: vivien8/email-service:latest
           env:
             - name: KAFKA_BROKER
               value: "kafka.kafka.svc.cluster.local:9092"

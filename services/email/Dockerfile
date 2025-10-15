@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Add company root certificate
-COPY ../../certs/entreprise-root.crt /usr/local/share/cacertificates/ 
+COPY SOLUTEC-RootCA_base64.crt /usr/local/share/cacertificates/ 
 
 # Install certificate tools & update CA store
 RUN apt-get update && \
@@ -16,7 +16,7 @@ RUN apt-get update && \
     update-ca-certificates
 
 #Configurer npm pour utiliser le certificat
-RUN npm config set cafile /usr/local/share/cacertificates/entreprise-root.crt
+RUN npm config set cafile /usr/local/share/cacertificates/SOLUTEC-RootCA_base64.crt
 
 # Install dependencies
 RUN npm install --production
