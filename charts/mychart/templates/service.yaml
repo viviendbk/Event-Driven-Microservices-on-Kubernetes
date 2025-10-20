@@ -1,0 +1,19 @@
+{{- $namespace := .Values.namespace | default "kafka" }}
+{{- range .Values.services }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .name }}
+  namespace: {{ $namespace }}
+spec:
+  type: {{ .type | default "ClusterIP" }}
+  selector:
+    app: {{ .name }}
+  {{- if .servicePort }}
+  ports:
+    - protocol: TCP
+      port: {{ .servicePort }}
+      targetPort: {{ .port | default .servicePort }}
+  {{- end }}
+{{- end }}

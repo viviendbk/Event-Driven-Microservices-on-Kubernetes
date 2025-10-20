@@ -1,0 +1,35 @@
+{{- $namespace := .Values.namespace | default "kafka" }}
+{{- range .Values.services }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+  namespace: {{ $namespace }}
+spec:
+  replicas: {{ .replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+    spec:
+      containers:
+        - name: {{ .name }}
+          image: "{{ .image }}:{{ .tag }}"
+          {{- if .port }}
+          ports:
+            - containerPort: {{ .port }}
+          {{- end }}
+          env:
+            - name: KAFKA_BROKER
+              value: "{{ $.Values.kafka.broker }}"
+          {{- if .resources }}
+          resources:
+            requests:
+              cpu: "{{ .resources.requests.cpu }}"
+            limits:
+              cpu: "{{ .resources.limits.cpu }}"
+          {{- end }}

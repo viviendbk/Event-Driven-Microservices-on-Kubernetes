@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: email-service
+  name: producer-service
   namespace: kafka
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: email-service
+      app: producer-service
   template:
     metadata:
       labels:
-        app: email-service
+        app: producer-service
     spec:
       containers:
-        - name: email-service
-          image: vivien8/email-service:latest
+        - name: producer-service
+          image: vivien8/producer-service:latest
           env:
             - name: KAFKA_BROKER
               value: "kafka.kafka.svc.cluster.local:9092"

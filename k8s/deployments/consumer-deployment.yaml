@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer-service
+  namespace: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumer-service
+  template:
+    metadata:
+      labels:
+        app: consumer-service
+    spec:
+      containers:
+        - name: consumer-service
+          image: vivien8/consumer-service:latest
+          env:
+            - name: KAFKA_BROKER
+              value: "kafka.kafka.svc.cluster.local:9092"

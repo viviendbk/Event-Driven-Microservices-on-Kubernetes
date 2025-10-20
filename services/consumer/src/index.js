@@ -1,11 +1,11 @@
 import { Kafka } from 'kafkajs';
 
 const kafka = new Kafka({
-  clientId: 'email-service',
+  clientId: 'consumer-service',
   brokers: [process.env.KAFKA_BROKER]
 });
 
-const consumer = kafka.consumer({ groupId: 'email-service-group' });
+const consumer = kafka.consumer({ groupId: 'consumer-service-group' });
 
 async function run() {
   await consumer.connect();
@@ -13,8 +13,8 @@ async function run() {
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      const order = JSON.parse(message.value.toString());
-      console.log('Processing order for email:', order);
+      const producer = JSON.parse(message.value.toString());
+      console.log('Processing producer for consumer:', producer);
     }
   });
 }

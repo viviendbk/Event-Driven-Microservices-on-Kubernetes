@@ -5,10 +5,10 @@ FROM node:20-slim
 WORKDIR /app
 
 # Copy package.json & package-lock.json
-COPY package*.json ./
+COPY ./services/consumer/src/package*.json ./
 
 # Add company root certificate
-COPY SOLUTEC-RootCA_base64.crt /usr/local/share/cacertificates/ 
+COPY certs/SOLUTEC-RootCA_base64.crt /usr/local/share/ca-certificates/
 
 # Install certificate tools & update CA store
 RUN apt-get update && \
@@ -17,12 +17,13 @@ RUN apt-get update && \
 
 #Configurer npm pour utiliser le certificat
 RUN npm config set cafile /usr/local/share/cacertificates/SOLUTEC-RootCA_base64.crt
+RUN npm config set strict-ssl false
 
 # Install dependencies
 RUN npm install --production
 
 # Copy source code
-COPY . .
+COPY services/consumer/src/ .
 
 # Run the service
 CMD ["node", "index.js"]

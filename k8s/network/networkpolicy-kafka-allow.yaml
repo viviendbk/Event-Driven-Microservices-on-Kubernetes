@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kafka-allow
+  namespace: kafka
+spec:
+  podSelector:
+    matchLabels:
+      app: kafka
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: kafka 
+        - podSelector:
+            matchLabels:
+              app: api-service
+        - podSelector:
+            matchLabels:
+              app: producer-service
+        - podSelector:
+            matchLabels:
+              app: consumer-service
+      ports:
+        - protocol: TCP
+          port: 9092
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: kafka
+      ports:
+        - protocol: TCP
+          port: 9092
