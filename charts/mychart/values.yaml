@@ -1,6 +1,10 @@
 namespace: kafka
 kafka:
   broker: kafka.kafka.svc.cluster.local:9092
+  image: apache/kafka
+  tag: 4.1.0
+  replicas: 3
+  storage: 5Gi
 
 services:
   - name: api-service
@@ -14,6 +18,13 @@ services:
         cpu: "100m"
       limits:
         cpu: "200m"
+    ingress:
+      host: api.kafka.local
+    hpa:
+      minReplicas: 1
+      maxReplicas: 5
+      cpu:
+        averageUtilization: 50
 
   - name: consumer-service
     image: vivien8/consumer-service
@@ -23,6 +34,104 @@ services:
   - name: producer-service
     image: vivien8/producer-service
     tag: latest
-    port: 3000
-    servicePort: 3000
     replicas: 1
+
+
+networkPolicies:
+  - name: deny-all
+    namespace: kafka
+    podSelector: {}
+    policyTypes:
+      - Ingress
+      - Egress
+
+  - name: api-allow
+    namespace: kafka
+    podSelector:
+      matchLabels:
+        app: api-service
+    policyTypes:
+      - Ingress
+      - Egress
+    ingress:
+      - from:
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: default
+        ports:
+          - protocol: TCP
+            port: 3000
+    egress:
+      - to:
+          - podSelector:
+              matchLabels:
+                app: kafka
+        ports:
+          - protocol: TCP
+            port: 9092
+
+  - name: consumer-allow
+    namespace: kafka
+    podSelector:
+      matchLabels:
+        app: consumer-service
+    policyTypes:
+      - Egress
+    egress:
+      - to:
+          - podSelector:
+              matchLabels:
+                app: kafka
+        ports:
+          - protocol: TCP
+            port: 9092
+
+  - name: producer-allow
+    namespace: kafka
+    podSelector:
+      matchLabels:
+        app: producer-service
+    policyTypes:
+      - Egress
+    egress:
+      - to:
+          - podSelector:
+              matchLabels:
+                app: kafka
+        ports:
+          - protocol: TCP
+            port: 9092
+
+  - name: kafka-allow
+    namespace: kafka
+    podSelector:
+      matchLabels:
+        app: kafka
+    policyTypes:
+      - Ingress
+      - Egress
+    ingress:
+      - from:
+          - podSelector:
+              matchLabels:
+                app: kafka
+          - podSelector:
+              matchLabels:
+                app: api-service
+          - podSelector:
+              matchLabels:
+                app: producer-service
+          - podSelector:
+              matchLabels:
+                app: consumer-service
+        ports:
+          - protocol: TCP
+            port: 9092
+    egress:
+      - to:
+          - podSelector:
+              matchLabels:
+                app: kafka
+        ports:
+          - protocol: TCP
+            port: 9092

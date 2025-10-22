@@ -141,4 +141,9 @@ kubectl apply -f k8s/hpa/horizontalpodautoscaler.yaml
 ```bash
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
+helm install prometheus prometheus-community/prometheus --namespace monitoring
+kubectl port-forward -n monitoring svc/prometheus-server 9091:9091
+
+kubectl port-forward -n kafka svc/api-service 8080:80
+
 ```

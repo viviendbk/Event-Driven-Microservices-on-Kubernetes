@@ -1,0 +1,21 @@
+{{- range .Values.networkPolicies }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .name }}
+  namespace: {{ .namespace | default "default" }}
+spec:
+  podSelector:
+{{ toYaml .podSelector | indent 4 }}
+  policyTypes:
+{{ toYaml .policyTypes | indent 4 }}
+  {{- if .ingress }}
+  ingress:
+{{ toYaml .ingress | indent 4 }}
+  {{- end }}
+  {{- if .egress }}
+  egress:
+{{ toYaml .egress | indent 4 }}
+  {{- end }}
+{{- end }}

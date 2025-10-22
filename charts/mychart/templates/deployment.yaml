@@ -33,3 +33,4 @@ spec:
             limits:
               cpu: "{{ .resources.limits.cpu }}"
           {{- end }}
+{{- end }}
