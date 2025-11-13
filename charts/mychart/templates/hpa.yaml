@@ -1,3 +1,4 @@
+{{- $namespace := .Release.Namespace | default "default" }}
 {{- range .Values.services }}
 {{- if .hpa }}
 ---
@@ -5,7 +6,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ .name }}-hpa
-  namespace: kafka
+  namespace: {{ $namespace }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

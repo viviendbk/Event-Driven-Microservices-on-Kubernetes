@@ -1,4 +1,4 @@
-{{- $namespace := .Values.namespace | default "kafka" }}
+{{- $namespace := .Release.Namespace | default "default" }}
 {{- range .Values.services }}
 ---
 apiVersion: apps/v1

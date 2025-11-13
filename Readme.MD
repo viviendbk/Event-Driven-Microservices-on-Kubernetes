@@ -97,53 +97,48 @@ v
 minikube start
 ```
 
-2. **Deploy Kafka**
-
-```bash
-kubectl apply -f k8s/kafka/kafka-namespace.yaml
-kubectl apply -f k8s/kafka/kafka-statefulset.yaml
-```
-
-3. **Deploy Services**
- 
-```bash
-cd services/producer
-docker build -t producer-service:latest .
-kubectl apply -f deployment.yaml
-
-cd ../consumer
-docker build -t consumer-service:latest .
-kubectl apply -f deployment.yaml
-
-cd ../api
-docker build -t api-service:latest .
-kubectl apply -f deployment.yaml
-```
-
-4. **Deploy Ingress**
-   
-```bash
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm repo update
-helm install my-ingress ingress-nginx/ingress-nginx
-kubectl apply -f k8s/ingress/api-service-ingress.yaml
-```
-
-5. **Deploy HPA**
+1. **Install dependencies**
 
 ```bash
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
-kubectl apply -f k8s/hpa/horizontalpodautoscaler.yaml
-```
-
-6. **Deploy Prometheus**
-
-```bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-helm install prometheus prometheus-community/prometheus --namespace monitoring
-kubectl port-forward -n monitoring svc/prometheus-server 9091:9091
-
-kubectl port-forward -n kafka svc/api-service 8080:80
-
+helm install ingress ingress-nginx/ingress-nginx -n dev
+helm install prometheus prometheus-community/kube-prometheus-stack -n dev
 ```
+
+2. **Deploy local chart**
+
+```bash
+helm repo update
+helm install my-chart /chart/mychart -n dev
+```
+
+1. **port forwarding & add local host**
+
+```bash
+kubectl port-forward svc/kube-prometheus-stack-prometheus 9090:9090 -n dev & \
+kubectl port-forward svc/kube-prometheus-stack-grafana 3000:80 -n dev & \
+kubectl port-forward svc/kube-prometheus-stack-alertmanager 9093:9093 -n dev & \
+kubectl port-forward svc/api-service 8080:80 -n dev
+
+sudo nano /etc/hosts
+add :
+127.0.0.1       api.dev.local
+```
+
+4. **test api**
+
+```bash
+curl api.dev.local:8080/messages
+```
+
+5. **monitor application**
+
+localhost:9090 for prometheus
+localhost:3000 for grafana
+
+credentials for grafana:
+admin
+prom-operator

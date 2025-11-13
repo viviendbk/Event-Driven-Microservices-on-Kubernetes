@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: producer-service
-  namespace: kafka
+  namespace: dev
 spec:
   replicas: 1
   selector:
@@ -15,7 +15,9 @@ spec:
     spec:
       containers:
         - name: producer-service
-          image: vivien8/producer-service:latest
+          image: "vivien8/producer-service:latest"
+          ports:
+            - containerPort: 3000
           env:
             - name: KAFKA_BROKER
-              value: "kafka.kafka.svc.cluster.local:9092"
+              value: "kafka.dev.svc.cluster.local:9092"

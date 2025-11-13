@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "kafkajs": "^2.2.4"
-  }
+    "express": "^4.18.2",
+    "kafkajs": "^2.2.4",
+    "prom-client": "^15.1.3"
+  },
+  "type": "module"
 }

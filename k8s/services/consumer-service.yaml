@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: api-service
+  name: consumer-service
   namespace: dev
   labels:
-    app: api-service
+    app: consumer-service
 spec:
   type: ClusterIP
   selector:
-    app: api-service
+    app: consumer-service
   ports:
     - name: http
       protocol: TCP

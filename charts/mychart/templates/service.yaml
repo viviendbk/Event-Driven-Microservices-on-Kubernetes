@@ -1,4 +1,4 @@
-{{- $namespace := .Values.namespace | default "kafka" }}
+{{- $namespace := .Release.Namespace | default "default" }}
 {{- range .Values.services }}
 {{- if .servicePort }}
 ---
@@ -7,12 +7,15 @@ kind: Service
 metadata:
   name: {{ .name }}
   namespace: {{ $namespace }}
+  labels:
+    app: {{ .name }}
 spec:
   type: {{ .type | default "ClusterIP" }}
   selector:
     app: {{ .name }}
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: {{ .servicePort }}
       targetPort: {{ .port | default .servicePort }}
 {{- end }}
@@ -23,6 +26,8 @@ kind: Service
 metadata:
   name: kafka
   namespace: {{ $namespace }}
+  labels:
+    app: kafka
 spec:
   clusterIP: None
   selector:

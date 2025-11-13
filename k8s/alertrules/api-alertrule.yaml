@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: simple-alert-rules
+  namespace: dev
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+  - name: test
+    rules:
+    - alert: ApiServiceDown
+      expr: up{job="api-service"} == 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "API Service down"
+        description: "The api-service has been down for more than 1 minute."
