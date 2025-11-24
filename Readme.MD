@@ -106,6 +106,10 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo update
 helm install ingress ingress-nginx/ingress-nginx -n dev
 helm install prometheus prometheus-community/kube-prometheus-stack -n dev
+helm install dynatrace-operator oci://public.ecr.aws/dynatrace/dynatrace-operator \
+--create-namespace \
+--namespace dynatrace \
+--atomic
 ```
 
 2. **Deploy local chart**

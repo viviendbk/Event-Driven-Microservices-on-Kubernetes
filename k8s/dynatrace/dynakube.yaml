@@ -1,0 +1,55 @@
+apiVersion: v1
+data:
+  apiToken: ZHQwYzAxLklSQ1o1WVRQRkJYS1E0WUE2S0xHUVpRVy5CWFI1RFY3Uk42U1JVMzRTQ1VKVFI3QVRVNlU3VkhYSk1NWUtGNk5WSFdGU0pCM0dDSFNMQlZQWEVBRVZPSVhT
+  dataIngestToken: ZHQwYzAxLkJGTVNUVTU3VVFCQUdRUlRORlBTM080RS5JVTdaSVJMTTZHTUJMM0w0VUtKVEE0N0FBTFFXUFFGUk5ZNkg3UEJJT0k2UTdITVlaT0dPWExLWTdKRlRKRDVX
+kind: Secret
+metadata:
+  name: test
+  namespace: dynatrace
+  labels:
+    dynatrace.com/created-by: "dynatrace.kubernetes"
+type: Opaque
+---
+apiVersion: dynatrace.com/v1beta5
+kind: DynaKube
+metadata:
+  name: test
+  namespace: dynatrace
+  labels:
+    dynatrace.com/created-by: "dynatrace.kubernetes"
+  annotations:
+    feature.dynatrace.com/k8s-app-enabled: "true"
+# Link to api reference for further information: https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-parameters
+spec:
+  apiUrl: https://rxx02969.live.dynatrace.com/api
+  metadataEnrichment:
+    enabled: true
+  oneAgent:
+    cloudNativeFullStack:
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+          operator: Exists
+  activeGate:
+    capabilities:
+      - routing
+      - kubernetes-monitoring
+      - debugging
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1.5Gi
+      limits:
+        cpu: 1000m
+        memory: 1.5Gi
+  logMonitoring: {}
+  telemetryIngest:
+    protocols:
+      - jaeger
+      - otlp
+      - statsd
+      - zipkin
+    serviceName: telemetry-ingest
