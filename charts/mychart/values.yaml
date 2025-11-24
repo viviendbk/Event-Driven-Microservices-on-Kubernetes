@@ -5,7 +5,7 @@ kafka:
   image: apache/kafka
   tag: 4.1.0
   replicas: 3
-  storage: 1Gi
+  storage: 2Gi
 
 services:
   - name: api-service
