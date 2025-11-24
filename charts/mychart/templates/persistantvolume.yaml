@@ -1,5 +1,6 @@
 {{- $kafka := .Values.kafka }}   # Save the top-level kafka values
 {{- range $i := until (int $kafka.replicas) }}
+---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
