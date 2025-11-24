@@ -1,11 +1,12 @@
-{{- range $i := until (int .Values.kafka.replicas) }}
+{{- $kafka := .Values.kafka }}   # Save the top-level kafka values
+{{- range $i := until (int $kafka.replicas) }}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: data-kafka-{{ $i }}
 spec:
   capacity:
-    storage: {{ .Values.kafka.storage }}Gi
+    storage: {{ $kafka.storage }}
   accessModes:
     - ReadWriteOnce
   storageClassName: manual-hostpath
