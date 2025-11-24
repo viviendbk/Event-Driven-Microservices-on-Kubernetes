@@ -1,0 +1,17 @@
+{{- $namespace := .Release.Namespace | default "default" }}
+{{- $kafka := .Values.kafka }}
+{{- range $i := until $kafka.replicas }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-kafka-{{ $i }}
+spec:
+  capacity:
+    storage: {{ $kafka.storage }}
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: manual-hostpath
+  hostPath:
+    path: /mnt/data/kafka-{{ $i }}
+{{- end }}
