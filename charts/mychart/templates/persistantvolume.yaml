@@ -5,7 +5,7 @@ metadata:
   name: data-kafka-{{ $i }}
 spec:
   capacity:
-    storage: {{ .Values.kafka.storage }}
+    storage: {{ .Values.kafka.storage }}Gi
   accessModes:
     - ReadWriteOnce
   storageClassName: manual-hostpath
