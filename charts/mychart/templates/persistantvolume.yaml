@@ -1,16 +1,16 @@
-{{- $kafka := .Values.kafka }}   # Save the top-level kafka values
-{{- range $i := until (int $kafka.replicas) }}
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: data-kafka-{{ $i }}
-spec:
-  capacity:
-    storage: {{ $kafka.storage }}
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: manual-hostpath
-  hostPath:
-    path: /mnt/data/kafka-{{ $i }}
-{{- end }}
+# {{- $kafka := .Values.kafka }}   # Save the top-level kafka values
+# {{- range $i := until (int $kafka.replicas) }}
+# ---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: data-kafka-{{ $i }}
+# spec:
+#   capacity:
+#     storage: {{ $kafka.storage }}
+#   accessModes:
+#     - ReadWriteOnce
+#   storageClassName: manual-hostpath
+#   hostPath:
+#     path: /mnt/data/kafka-{{ $i }}
+# {{- end }}

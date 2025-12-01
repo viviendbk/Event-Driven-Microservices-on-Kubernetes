@@ -15,6 +15,11 @@ spec:
     metadata:
       labels:
         app: {{ .name }}
+      # --- NEW: Prometheus Scraping Annotations ---
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .port }}"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
         - name: {{ .name }}
@@ -26,6 +31,15 @@ spec:
           env:
             - name: KAFKA_BROKER
               value: "{{ $.Values.kafka.broker }}"
+            
+            # --- NEW: Loop to add extra env vars from values.yaml ---
+            {{- if .extraEnv }}
+            {{- range .extraEnv }}
+            - name: {{ .name }}
+              value: "{{ .value }}"
+            {{- end }}
+            {{- end }}
+
           {{- if .resources }}
           resources:
             requests:

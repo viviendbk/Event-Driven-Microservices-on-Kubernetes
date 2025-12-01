@@ -17,8 +17,6 @@ spec:
       labels:
         app: kafka
     spec:
-      securityContext:
-        fsGroup: 1000
       containers:
         - name: kafka
           image: "{{ $kafka.image | default "apache/kafka" }}:{{ $kafka.tag | default "4.1.0" }}"
@@ -52,12 +50,7 @@ spec:
     - metadata:
         name: data
       spec:
-        securityContext:
-          fsGroup: 1000
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
             storage: {{ $kafka.storage }}
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000

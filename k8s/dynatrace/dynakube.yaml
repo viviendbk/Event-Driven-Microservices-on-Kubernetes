@@ -1,10 +1,10 @@
 apiVersion: v1
 data:
-  apiToken: ZHQwYzAxLlo0RllYSUVaUUNCRFFYUExHUjNKTDNVUy5GSEtWSlVUUkk1Tlc1MkZIMkNFRlFFTlpWUlg1N1NNSllCNEhBVDZIR0VBSVRZNFNORURIREEyV0dOTTZLT0VE
-  dataIngestToken: ZHQwYzAxLlY0QUhJSlRPVFhSR0gyRFFEQUNGV0RFNi5JM1c0QU9YUkpPV0ZPTVcyWkkzQTNHWVdPNFdMSDRBTEdXU0hCNllTQVVDRDc0WlhUUVVSMlRETUVSSVBGS1NH
+  apiToken: ZHQwYzAxLlIzUEVNSlpSVDMzSklFQUkzTE5PQUpRNi40STYyS1hWQ0JQN09ISDdCQzNVRFpPSTRSWk5QNFUyN1BDSUZXR1RLSFdSVUZKV0xXMkJOTU9IVlkyRVJPNjZG
+  dataIngestToken: ZHQwYzAxLlJBSUJKVExXSUtYU1FXNkRGWkdJVlFMMi5IUkQ3WE5KVVBCVEtVVUJXS1M3T0NVTUJESDdDWFFPTjVIRVVNWlVEUllSUzI2Qlc2U0VQNzZDNVlHV0VJTVZV
 kind: Secret
 metadata:
-  name: other-k8s-2025-11-25-1764059286
+  name: test
   namespace: dynatrace
   labels:
     dynatrace.com/created-by: "dynatrace.kubernetes"
@@ -13,7 +13,7 @@ type: Opaque
 apiVersion: dynatrace.com/v1beta5
 kind: DynaKube
 metadata:
-  name: other-k8s-2025-11-25-1764059286
+  name: test
   namespace: dynatrace
   labels:
     dynatrace.com/created-by: "dynatrace.kubernetes"

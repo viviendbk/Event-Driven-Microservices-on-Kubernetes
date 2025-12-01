@@ -28,5 +28,5 @@ COPY services/producer/src/ .
 # Expose port (optional, if service needs HTTP)
 EXPOSE 3000
 
-# Run the service
-CMD ["node", "index.js"]
+# This allows it to run the "node --require ./instrumentation.js ..." command defined in package.json
+CMD ["npm", "start"]

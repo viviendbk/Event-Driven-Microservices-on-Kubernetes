@@ -45,7 +45,11 @@ services:
     ingress:
       host: producer.dev.local
 
-
+    # --- NEW: OpenTelemetry Configuration ---
+    extraEnv:
+      - name: OTEL_EXPORTER_OTLP_ENDPOINT
+        value: "http://telemetry-ingest.dynatrace.svc.cluster.local:4317"
+        
 
 networkPolicies:
   - name: deny-all
@@ -185,7 +189,7 @@ networkPolicies:
           - protocol: TCP
             port: 1
             endPort: 62000
-  
+
   - name: allow-metrics-scrape
     podSelector:
       matchExpressions:
@@ -229,7 +233,7 @@ networkPolicies:
           - protocol: TCP
             port: 443
           - protocol: TCP
-            port: 587 
+            port: 587
 
 prometheusAlerts:
   - group: api-service
@@ -275,4 +279,3 @@ prometheusAlerts:
         annotations:
           summary: "Consumer Service down"
           description: "The consumer-service has been down for more than 1 minute."
-

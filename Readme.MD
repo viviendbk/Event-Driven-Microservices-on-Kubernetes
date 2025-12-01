@@ -72,9 +72,9 @@ v
 
 ## Services
 
-| Service         | Port | Description                               |
-|-----------------|------|-------------------------------------------|
-| producer-service | N/A  | Sends messages to Kafka topics             |
+| Service          | Port | Description                               |
+| ---------------- | ---- | ----------------------------------------- |
+| producer-service | N/A  | Sends messages to Kafka topics            |
 | consumer-service | N/A  | Consumes messages from Kafka topics       |
 | api-service      | 3000 | Provides HTTP API to query Kafka messages |
 
@@ -100,7 +100,12 @@ minikube start
 1. **Install dependencies**
 
 ```bash
+kubectl create namespace dev
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+kubectl -n kube-system patch deployment metrics-server --type='json' -p='[
+  { "op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls" },
+  { "op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-preferred-address-types=InternalIP,Hostname,InternalDNS,ExternalDNS" }
+]'
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
@@ -108,8 +113,11 @@ helm install ingress ingress-nginx/ingress-nginx -n dev
 helm install prometheus prometheus-community/kube-prometheus-stack -n dev
 helm install dynatrace-operator oci://public.ecr.aws/dynatrace/dynatrace-operator \
 --create-namespace \
---namespace dynatrace \
---atomic
+--namespace dynatrace
+kubectl apply -f k8s/dynatrace/dynakube.yaml
+
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
 
 2. **Deploy local chart**
@@ -126,6 +134,7 @@ kubectl port-forward svc/kube-prometheus-stack-prometheus 9090:9090 -n dev & \
 kubectl port-forward svc/kube-prometheus-stack-grafana 3000:80 -n dev & \
 kubectl port-forward svc/kube-prometheus-stack-alertmanager 9093:9093 -n dev & \
 kubectl port-forward svc/api-service 8080:80 -n dev
+kubectl port-forward svc/argocd-server -n argocd 8000:443
 
 sudo nano /etc/hosts
 add :
