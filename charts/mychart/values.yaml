@@ -8,24 +8,24 @@ kafka:
   storage: 5Gi
 
 services:
-  - name: api-service
-    image: vivien8/api-service
-    tag: latest
-    port: 3000
-    servicePort: 80
-    replicas: 1
-    resources:
-      requests:
-        cpu: "100m"
-      limits:
-        cpu: "200m"
-    ingress:
-      host: api.dev.local
-    hpa:
-      minReplicas: 1
-      maxReplicas: 5
-      cpu:
-        averageUtilization: 50
+  # - name: api-service
+  #   image: vivien8/api-service
+  #   tag: latest
+  #   port: 3000
+  #   servicePort: 80
+  #   replicas: 1
+  #   resources:
+  #     requests:
+  #       cpu: "100m"
+  #     limits:
+  #       cpu: "200m"
+  #   ingress:
+  #     host: api.dev.local
+  #   hpa:
+  #     minReplicas: 1
+  #     maxReplicas: 5
+  #     cpu:
+  #       averageUtilization: 50
 
   - name: consumer-service
     image: vivien8/consumer-service
@@ -49,7 +49,6 @@ services:
     extraEnv:
       - name: OTEL_EXPORTER_OTLP_ENDPOINT
         value: "http://telemetry-ingest.dynatrace.svc.cluster.local:4317"
-        
 
 networkPolicies:
   - name: deny-all
